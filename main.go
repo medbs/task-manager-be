@@ -34,10 +34,10 @@ func main() {
 	v1 := router.Group("/api/v1/todos")
 	{
 		v1.POST("/", createTodo)
-		v1.GET("/", fetchAllTodo)
-	//	v1.GET("/:id", fetchSingleTodo)
-	//	v1.PUT("/:id", updateTodo)
-	//	v1.DELETE("/:id", deleteTodo)
+		v1.GET("/", getAllTodos)
+		v1.GET("/:title", getSingleTodo)
+		v1.PUT("/:title", updateTodo)
+		v1.DELETE("/:title", deleteTodo)
 	}
 
 	router.Run()
@@ -63,7 +63,7 @@ func createTodo(cxt *gin.Context) {
 	})
 }
 
-func fetchAllTodo(cxt *gin.Context) {
+func getAllTodos(cxt *gin.Context) {
 
 	var todos []*Todo
 	ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -81,10 +81,8 @@ func fetchAllTodo(cxt *gin.Context) {
     if err != nil {
         log.Fatal(err)
     }
-
     todos = append(todos, &todo)
 }
-
 	if len(todos) <= 0 {
 		cxt.JSON(http.StatusNotFound, gin.H{
 			"status":  http.StatusNotFound,
@@ -96,5 +94,73 @@ func fetchAllTodo(cxt *gin.Context) {
 	cxt.JSON(http.StatusOK, gin.H{
 		"status": http.StatusOK,
 		"data":   todos,
+	})
+}
+
+
+func deleteTodo(cxt *gin.Context) {
+
+ title:= cxt.Param("title")
+ ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+ defer cancel()
+ _,err := todosCollection.DeleteMany(ct,bson.D{{"title",title}})
+
+ if err != nil {
+	 fmt.Println("Error: " + err.Error())
+	 cxt.JSON(http.StatusNotFound, gin.H{
+		 "status":  http.StatusNotFound,
+		 "message": "todo not found",
+	 })
+	 return
+ }
+
+ cxt.JSON(http.StatusOK, gin.H{
+	 "status":  http.StatusOK,
+	 "message": "task with the name "+ title + " is deleted successfully!",
+ })
+}
+
+
+func getSingleTodo(cxt *gin.Context) {
+var todo Todo
+title:= cxt.Param("title")
+ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+err := todosCollection.FindOne(ct,bson.D{{"title",title}}).Decode(&todo)
+
+if err != nil || todo == (Todo{}) {
+	fmt.Println("Error: " + err.Error())
+	cxt.JSON(http.StatusNotFound, gin.H{
+		"status":  http.StatusNotFound,
+		"message": "todo not found",
+	})
+	return
+}
+
+cxt.JSON(http.StatusOK, gin.H{
+	"status": http.StatusOK,
+	"data":   todo,
+})
+}
+
+
+func updateTodo(cxt *gin.Context) {
+	title:= cxt.Param("title")
+	updatedTitle := cxt.PostForm("updatedTitle")
+	ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	_,err := todosCollection.UpdateOne(ct,bson.D{{"title",title}},bson.M{"$set": bson.M{"title": updatedTitle}})
+	if err != nil {
+		fmt.Println("Error: " + err.Error())
+		cxt.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "todo not found",
+		})
+		return
+	}
+
+	cxt.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Todo updated successfully!",
 	})
 }
