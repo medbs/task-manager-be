@@ -8,13 +8,20 @@ import (
 	"time"
 	"github.com/gin-gonic/gin"
 	"taskmanager/storage/model"
+	"taskmanager/internal/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var todosCollection *mongo.Collection
 
-func createTodo(cxt *gin.Context) {
+func init(){
+	client := config.Connect()
+	db := client.Database("blog")
+	todosCollection = db.Collection("posts")
+}
+
+func CreateTodo(cxt *gin.Context) {
 
 	title := cxt.PostForm("title")
 	ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -33,7 +40,7 @@ func createTodo(cxt *gin.Context) {
 	})
 }
 
-func getAllTodos(cxt *gin.Context) {
+func GetAllTodos(cxt *gin.Context) {
 
 	var todos []*model.Todo
 	ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -67,7 +74,7 @@ func getAllTodos(cxt *gin.Context) {
 }
 
 
-func deleteTodo(cxt *gin.Context) {
+func DeleteTodo(cxt *gin.Context) {
 
  title:= cxt.Param("title")
  ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -90,7 +97,7 @@ func deleteTodo(cxt *gin.Context) {
 }
 
 
-func getSingleTodo(cxt *gin.Context) {
+func GetSingleTodo(cxt *gin.Context) {
 var todo model.Todo
 title:= cxt.Param("title")
 ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -113,7 +120,7 @@ cxt.JSON(http.StatusOK, gin.H{
 }
 
 
-func updateTodo(cxt *gin.Context) {
+func UpdateTodo(cxt *gin.Context) {
 	title:= cxt.Param("title")
 	updatedTitle := cxt.PostForm("updatedTitle")
 	ct, cancel := context.WithTimeout(context.Background(), 10*time.Second)

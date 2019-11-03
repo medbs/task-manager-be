@@ -8,9 +8,6 @@ import (
   "go.mongodb.org/mongo-driver/mongo/options"
 )
 
-
-
-
 func Connect() *mongo.Client{
 
   // create a new context
