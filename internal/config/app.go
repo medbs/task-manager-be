@@ -1,37 +1,44 @@
 package config
 
 import (
-  "log"
-  "fmt"
-  "context"
-  "go.mongodb.org/mongo-driver/mongo"
-  "go.mongodb.org/mongo-driver/mongo/options"
+	"context"
+	"fmt"
+  "os"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 )
 
-func Connect() *mongo.Client{
+func Connect() *mongo.Client {
 
-  // create a new context
-  ctx := context.Background()
+  var clientOptions *options.ClientOptions
 
-  // Set client options
-  clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	// create a new context
+	ctx := context.Background()
 
-  // Connect to MongoDB
-  client, err := mongo.Connect(ctx, clientOptions)
-  if err != nil {
-    log.Fatal(err)
-  }
+ 	mongoURL := os.Getenv("MONGODB_HOST")
 
-  // Check the connection
-  err = client.Ping(context.TODO(), nil)
-  if err != nil {
-    log.Fatal(err)
-  }
+	// Set client options
+	if mongoURL != "" {
+		clientOptions = options.Client().ApplyURI("mongodb://"+mongoURL+":27017")
+	} else {
+    clientOptions = options.Client().ApplyURI("mongodb://localhost:27017")
+	}
+	// Connect to MongoDB
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  fmt.Println("Connected to MongoDB!")
-  return client
+	// Check the connection
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Connected to MongoDB!")
+	return client
 }
-
 
 /*func Disconnect() *mongo.Client{
   err = client.Disconnect(context.TODO())

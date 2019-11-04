@@ -2,5 +2,5 @@ package server
 
 func Init() {
 	r := NewRouter()
-	r.Run()
+	r.Run(":8099")
 }
