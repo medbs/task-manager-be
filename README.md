@@ -16,20 +16,18 @@ Docker & Docker Compose to run it as a container
 
 
 #### Examples
-* Add TODO:
-`curl -d '{"Title":"taskz"}' -H "Content-Type: application/json" -X POST http://localhost:8099/api/v1/todos/`
-* Get all TODOs:
-`curl -X GET http://localhost:8099/api/v1/todos/
-`
+* Add Task:
+`curl -d '{"Title":"t1"}' -H "Content-Type: application/json" -X POST http://localhost:8099/api/v1/tm/`
 
-* Get one TODO:
-`curl -X GET http://localhost:8099/api/v1/todos/{title}
+* Get all Task:
+`curl -X GET http://localhost:8099/api/v1/tm/
 `
-
-* Remove TODO:
-`curl -X DELETE http://localhost:8099/api/v1/todos/{title}
+* Get one Task:
+`curl -X GET http://localhost:8099/api/v1/tm/{title}
 `
-
-* Update TODO:
-`curl -d "updatedTitle=task1" -H "Content-Type: application/x-www-form-urlencoded" -X PUT http://localhost:8080/api/v1/todos/{title}
+* Remove Task:
+`curl -X DELETE http://localhost:8099/api/v1/tm/{title}
+`
+* Update Task:
+`curl -d '{"Title":"t2"}' -H "Content-Type: application/json" -X PUT http://localhost:8099/api/v1/tm/{title}
 `
