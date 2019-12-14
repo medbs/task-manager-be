@@ -17,17 +17,17 @@ Docker & Docker Compose to run it as a container
 
 #### Examples
 * Add Task:
-`curl -d '{"Title":"t1"}' -H "Content-Type: application/json" -X POST http://localhost:8099/api/v1/tm/`
+`curl -d '{"Title":"t1"}' -H "Content-Type: application/json" -X POST http://localhost:8099/api/v1/tm/tasks/`
 
 * Get all Task:
-`curl -X GET http://localhost:8099/api/v1/tm/
+`curl -X GET http://localhost:8099/api/v1/tm/tasks
 `
 * Get one Task:
-`curl -X GET http://localhost:8099/api/v1/tm/{title}
+`curl -X GET http://localhost:8099/api/v1/tm/tasks/{title}
 `
 * Remove Task:
-`curl -X DELETE http://localhost:8099/api/v1/tm/{title}
+`curl -X DELETE http://localhost:8099/api/v1/tm/tasks/{title}
 `
 * Update Task:
-`curl -d '{"Title":"t2"}' -H "Content-Type: application/json" -X PUT http://localhost:8099/api/v1/tm/{title}
+`curl -d '{"Title":"t2"}' -H "Content-Type: application/json" -X PUT http://localhost:8099/api/v1/tm/tasks/{title}
 `

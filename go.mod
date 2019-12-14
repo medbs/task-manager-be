@@ -11,6 +11,7 @@ require (
 	github.com/json-iterator/go v1.1.7 // indirect
 	github.com/mattn/go-isatty v0.0.9 // indirect
 	github.com/mongodb/mongo-go-driver v1.1.1 // indirect
+	github.com/pkg/errors v0.8.1 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
 	github.com/ugorji/go v1.1.7 // indirect

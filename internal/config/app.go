@@ -3,26 +3,32 @@ package config
 import (
 	"context"
 	"fmt"
-  "os"
+	"log"
+	"os"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
+
+// conn is the main database connection.
+/*type conn struct {
+	db *mongo.Client
+}*/
 
 func Connect() *mongo.Client {
 
-  var clientOptions *options.ClientOptions
+	var clientOptions *options.ClientOptions
 
 	// create a new context
 	ctx := context.Background()
 
- 	mongoURL := os.Getenv("MONGODB_HOST")
+	mongoURL := os.Getenv("MONGODB_HOST")
 
 	// Set client options
 	if mongoURL != "" {
-		clientOptions = options.Client().ApplyURI("mongodb://"+mongoURL+":27017")
+		clientOptions = options.Client().ApplyURI("mongodb://" + mongoURL + ":27017")
 	} else {
-    clientOptions = options.Client().ApplyURI("mongodb://localhost:27017")
+		clientOptions = options.Client().ApplyURI("mongodb://localhost:27017")
 	}
 	// Connect to MongoDB
 	client, err := mongo.Connect(ctx, clientOptions)
